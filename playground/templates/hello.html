@@ -1,0 +1,283 @@
+{% load static %} <!-- Add this line at the top of the template -->
+{% load bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+{% load bootstrap_icons %}
+
+
+
+<!-- TODO:-->
+<!-- Freundschaftsstatus, Freundschaftsanfragen -->
+<!-- Alles aus Datenbank auslesen -->
+<!-- Datenbank generieren -->
+<!-- Sessioncookie& userverwaltung -->
+
+
+
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Alpakabook</title>
+
+    <style>
+        /* CSS for the blue banner */
+        @font-face {
+            font-family: 'alpaka';
+            src: url("{% static 'klavika-medium.otf' %}") format('opentype'); /* Update the font file path */
+            font-weight: normal;
+            font-style: normal;
+        }
+        
+        .banner {
+            background-color: #4267B2; /* Blue color similar to Facebook */
+            padding:  10px 10px 0px 20px;
+            color: white;
+            font-family: 'alpaka'; /* Use the custom font followed by fallback fonts */
+            /*font-weight: bold;*/
+            max-width: 100%; /* Make the banner span the whole page width */
+            position: relative;
+        }
+        
+        /* CSS for the main content */
+        .content {
+            margin: 20px;
+        }
+
+        img.fixed {
+            border: 5px outset lightgray;
+            border-radius: 2%;
+            width:100%;
+            position: relative;
+            top:20px;
+        }
+
+        img.round {
+            border-radius: 50%;
+            margin:1px;
+            float:right;
+        }
+
+        p.lol {
+        float: right;
+        padding: 15px 0px 0px 0px; 
+        }
+
+        h2.lol {
+            float: left;
+            margin: 9px 0px 25px 9px;
+        }
+
+        h2.lol2 {
+            float: left;
+            margin: 9px 0px 25px -10px;
+        }
+
+        /* CSS for the profile picture */
+        .profile-picture {
+            width: 30px; /* Adjust the size as needed */
+            height: 30px; /* Adjust the size as needed */
+            border-radius: 50%;
+            top:5px;
+            
+        }
+
+        /* CSS for the username */
+        .username {
+            font-size: 14px;
+
+        }
+
+        /* CSS for the footer */
+        .footer {
+            background-color: #f2f2f2; /* Light gray background */
+            padding: 10px;
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            font-size: 12px;
+            margin-bottom: 0px;
+        }
+
+        /* Reset body margin and padding to remove white space */
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link{
+  color: white !important;
+  }
+    </style>
+</head>
+<body>
+    <div class="banner">
+
+        <div class="container-fluid" style="position: relative; left:-10px;">
+            <div class="row">
+              <div class="col-4">
+          <h1 style="font-family: 'alpaka', Arial, sans-serif;">alpakabook</h1>
+          </div>
+          <div class="col-5">
+            
+            <div class="input-group">
+                <input type="search" class="form-control rounded" placeholder="Suche" aria-label="Search" aria-describedby="search-addon" />
+                <button type="button" class="btn btn-outline-light"> {% bs_icon 'search' %} </button>
+              </div>
+
+          </div>
+          <div class="col-3">
+            <a style="float: right;" class="nav-link" href="#">{{user}}</a>
+             <a href="#">
+                        <img src="{% static 'U1.jpg' %}" alt="" width="40" height="40" class="round">
+                        </a>
+                        
+
+                    </div>
+                </div>
+            </div>
+
+
+
+
+
+
+
+
+
+
+
+           <!-- <h1 style="font-family: 'alpaka', Arial, sans-serif;">alpakabook</h1>-->
+    </div>
+    <div class="content">
+    <div class="container-fluid" style="position: relative; left:-10px;">
+        <div class="row">
+          <div class="col-3">
+            <!-- User profile picture -->
+        <img src="{% static 'U1.jpg' %}" alt="Profile Picture" class="fixed default-profile-picture">
+          </div>
+          <div class="col-6"><h2 style="font-family:  Arial, sans-serif; color:#142b58" class="lol">{{user}}</h2>
+   
+        <table class="table">
+           
+            <tr>
+              <td>E-mail</td>
+              <td>fake@email.de</td>
+            </tr>
+            <tr>
+              <td>Name</td>
+              <td>{{user}}</td>
+            </tr>
+            
+            <tr>
+              <td>Alter</td>
+              <td>25</td>
+            </tr>
+            <tr>
+              <td>Lieblingseis</td>
+              <td>Zitrone oder Himbeer</td>
+            </tr>
+            <tr>
+              <td>Hufgröße</td>
+              <td>40</td>
+            </tr>
+            <tr>
+              <td>Hobbies</td>
+              <td>Programmieren, Löten, Sonnenhüte tragen</td>
+            </tr>
+          </table>
+        
+        </div>
+        <div class="col-3">
+            <div class="container">
+            <div class="row">
+            <h2 style="font-family:  Arial, sans-serif; color:#142b58" class="lol2">Freund*innen:</h2>
+            </div>
+            
+                <div class="row">
+                  <div class="col">
+                    <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
+                  </div>
+                  <div class="col">
+                    <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
+                  </div>
+                  <div class="col">
+                    <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
+                  </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-4">
+                      <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
+                    </div>
+                    <div class="col-4">
+                      <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
+                    </div>
+                    <div class="col-4">
+                      <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
+                    </div>
+                  </div>
+                  <br>
+                  <div class="row">
+                    <div class="col">
+                      <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
+                    </div>
+                    <div class="col">
+                      <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
+                    </div>
+                    <div class="col">
+                      <img src="{% static 'default.png' %}" class="img-thumbnail" style="width: 100%;">
+                    </div>
+                  </div>
+
+
+
+
+
+
+              </div>
+
+
+
+
+
+        </div>
+        </div>
+      </div>
+    
+   
+
+          
+          <br>
+        <h3>Posts:</h3>
+          <div class="list-group">
+            <a href="#" class="list-group-item list-group-item-action" aria-current="true">
+              <div class="d-flex w-100 justify-content-between">
+                <p class="mb-1">Hallo, ich bin grade im Urlaub</p>
+                <small>vor 1 Stunde</small>
+              </div>
+             
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between">
+                <p class="mb-1">Ich habe ein Gedicht geschrieben:<br> <br> Rosen sind rot, <br> Lamas sind smart, <br> und auch sehr behaart</p>
+                <small class="text-muted">vor 3Tagen</small>
+              </div>
+            
+            </a>
+            <a href="#" class="list-group-item list-group-item-action">
+              <div class="d-flex w-100 justify-content-between">
+                <p class="mb-1">Zitrone ist mein Lieblingseis!!!</p>
+                <small class="text-muted">vor 5 Tagen</small>
+              </div>
+              
+            </a>
+          </div>
+    </div>
+
+    
+    <div class="footer">
+        <p>&copy; 2023 Alpakabook. All rights reserved.</p>
+    </div>
+</body>
+</html>
