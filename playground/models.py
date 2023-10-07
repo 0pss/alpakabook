@@ -28,3 +28,21 @@ class Post(models.Model):
     user = models.ForeignKey(User_dev2, on_delete=models.CASCADE)
     content = models.TextField()
     timestamp = models.DateTimeField(auto_now_add=True)
+
+
+from django.contrib.auth.models import User
+from django.db import models
+
+class Friendship(models.Model):
+    sender = models.ForeignKey(User_dev2, related_name='sent_friend_requests', on_delete=models.CASCADE)
+    receiver = models.ForeignKey(User_dev2, related_name='received_friend_requests', on_delete=models.CASCADE)
+    STATUS_CHOICES = (
+        ('send_request', 'Send Request'),
+        ('request_sent', 'Request Sent'),
+        ('friends', 'Friends'),
+    )
+    status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='send_request')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['sender', 'receiver']

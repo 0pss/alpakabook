@@ -4,6 +4,7 @@ from django.http import Http404
 
 from .models import User_dev2 as User_dev
 
+from django.db.models import Q
 
 # Create your views here.
 # request --> response
@@ -14,8 +15,29 @@ def userpage(request, user_id):
         user = User_dev.objects.get(pk=user_id)
     except User_dev.DoesNotExist:
         raise Http404("User does not exist")
-    print(user)
-    return render(request, "hello.html", {'user': user})
+    #print(user)
+    #return render(request, "hello.html", {'user': user})
+
+
+    viewed_user = User_dev.objects.get(id=user_id)
+    logged_in_user = request.user
+
+    # Determine the friendship status
+
+    friendship = Friendship.objects.filter(
+        (Q(sender=logged_in_user, receiver=viewed_user) | Q(sender=viewed_user, receiver=logged_in_user))).first()
+
+    if friendship is not None:
+        # Users are friends
+        viewed_user.friendship_status = friendship.status
+    else:
+        viewed_user.friendship_status = 'send_request'
+
+    viewed_user.friendship_status_display = dict(Friendship.STATUS_CHOICES)[viewed_user.friendship_status]
+
+    print("When requesting user, this status was determined: ", viewed_user.friendship_status)
+    return render(request, 'hello.html', {'user': viewed_user})
+
 
 
 from django.http import JsonResponse
@@ -103,3 +125,47 @@ from django.shortcuts import render
 def user_profile(request):
     # Your profile view logic here
     return render(request, 'hello.html')  # Use the appropriate template
+
+
+# views.py
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .models import Friendship
+
+# views.py
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+
+@login_required
+def handle_friend_request(request, user_id):
+
+    if request.method == 'POST':
+        import json
+        post_data = json.loads(request.body.decode("utf-8"))
+        print(post_data)
+        status = post_data['status']
+        receiver = User_dev.objects.get(id=user_id)
+        sender = request.user
+
+        print(status)
+
+        # Handle the friend request based on the status
+        if status == 'send_request':
+            # Create a new friendship request
+            friendship = Friendship(sender=sender, receiver=receiver, status='request_sent')
+            friendship.save()
+            new_status = 'request_sent'
+        elif status == 'request_sent':
+            # Accept the friend request
+            friendship = Friendship.objects.get(sender=receiver, receiver=sender)
+            friendship.status = 'friends'
+            friendship.save()
+            new_status = 'friends'
+        else:
+            # Handle other cases as needed
+            new_status = status
+
+        print("nwéw Status: " , new_status, "   ", dict(Friendship.STATUS_CHOICES))
+        return JsonResponse({'success': True, 'new_status': new_status, 'new_status_display': dict(Friendship.STATUS_CHOICES)[new_status]})
+    return JsonResponse({'success': False})
+
