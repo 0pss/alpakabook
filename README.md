@@ -1,1 +1,4 @@
 # alpakabook
+
+
+conda activate django

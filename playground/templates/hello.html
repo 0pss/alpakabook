@@ -13,9 +13,6 @@
 <!-- Sessioncookie& userverwaltung -->
 
 
-
-
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -249,32 +246,55 @@
 
           
           <br>
-        <h3>Posts:</h3>
-          <div class="list-group">
-            <a href="#" class="list-group-item list-group-item-action" aria-current="true">
-              <div class="d-flex w-100 justify-content-between">
-                <p class="mb-1">Hallo, ich bin grade im Urlaub</p>
-                <small>vor 1 Stunde</small>
-              </div>
-             
-            </a>
-            <a href="#" class="list-group-item list-group-item-action">
-              <div class="d-flex w-100 justify-content-between">
-                <p class="mb-1">Ich habe ein Gedicht geschrieben:<br> <br> Rosen sind rot, <br> Lamas sind smart, <br> und auch sehr behaart</p>
-                <small class="text-muted">vor 3Tagen</small>
-              </div>
-            
-            </a>
-            <a href="#" class="list-group-item list-group-item-action">
-              <div class="d-flex w-100 justify-content-between">
-                <p class="mb-1">Zitrone ist mein Lieblingseis!!!</p>
-                <small class="text-muted">vor 5 Tagen</small>
-              </div>
-              
-            </a>
-          </div>
-    </div>
+                    <div id="post-section">
+                <h3>Posts:</h3>
+                <div class="list-group">
+                    <!-- Posts will be displayed here -->
+                </div>
+            </div>
 
+            <div id="post-form">
+                <h3>Create a Post:</h3>
+                <form method="post" id="create-post-form">
+                    {% csrf_token %}
+                    <textarea name="content" id="post-content" placeholder="Write your post here"></textarea>
+                    <button type="submit">Post</button>
+                </form>
+            </div>
+
+
+               <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+                // Function to retrieve and display posts
+                   function getPosts(userId) {
+                        $.get(`/user/${userId}/get_posts/`, function (data) {
+                            $('#post-section .list-group').html(data);
+                        });
+                    }
+
+                // Event handler for post submission
+                $('#create-post-form').submit(function (event) {
+                    event.preventDefault();
+                    $.ajax({
+                        url: `/user/{{ user.id }}/create_post/`,
+                        method: 'POST',
+                        data: $(this).serialize(),
+                        success: function () {
+                            // Clear the textarea after successful submission
+                            $('#post-content').val('');
+                            // Retrieve and display the updated list of posts
+                            getPosts({{user.id}});
+                        },
+                    });
+                });
+
+                // Initial load of posts
+                getPosts({{user.id}});
+            </script>
+
+
+
+</div>
     
     <div class="footer">
         <p>&copy; 2023 Alpakabook. All rights reserved.</p>
