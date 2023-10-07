@@ -3,17 +3,39 @@
 <ul>
     {% for notification in unread_notifications %}
         <li>
-            <p>{{ notification.sender.username }} sent you a friend request.</p>
-            <button onclick="acceptFriendRequest({{ notification.id }})">Accept</button>
+            {% if notification.notification_type == 'friend_request' %}
+                <p>{{ notification.sender.username }} sent you a friend request.</p>
+                <button onclick="acceptFriendRequest({{ notification.id }})">Accept</button>
+            {% elif notification.notification_type == 'friend_request_accepted' %}
+                <p>{{ notification.sender.username }} has accepted {{ notification.id }} your request.</p>
+                <button onclick="markNotificationRead({{ notification.id }})">OK</button>
+            {% endif %}
         </li>
     {% empty %}
         <p>No unread notifications.</p>
     {% endfor %}
 </ul>
 
+
 <script>
 
-    function acceptFriendRequest(notificationId) {
+    function markNotificationRead(notificationId) {
+                // Send an AJAX request to the server to mark the notification as read
+        fetch(`/user/mark_notification_read/${notificationId}/`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Remove the notification from the UI or update its styling
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+
+    }
+
+
+function acceptFriendRequest(notificationId) {
     // Use AJAX to send a request to the server to accept the friend request
     fetch(`/user/accept_friend_request/${notificationId}/`)
         .then(response => response.json())
@@ -26,5 +48,6 @@
             console.error('Error:', error);
         });
 }
+
 
 </script>

@@ -193,9 +193,9 @@ def accept_friend_request(request, notification_id):
             friendship.save()
 
             # Create a Notification for the sender
-            notification = Notification(sender=notification.receiver, receiver=notification.sender,
-                                        notification_type='friend_request_accepted')
-            notification.save()
+            notification2 = Notification(sender=notification.receiver, receiver=notification.sender,
+                                        notification_type='friend_request_accepted', is_read=False)
+            notification2.save()
         except Friendship.DoesNotExist:
             # Handle the case where the friendship doesn't exist
             pass
@@ -216,3 +216,14 @@ def notifications(request):
     unread_notifications = Notification.objects.filter(receiver=request.user, is_read=False)
 
     return render(request, 'notifications.html', {'unread_notifications': unread_notifications})
+
+
+def mark_notification_read(request, notification_id):
+    print("marking as read ", notification_id)
+    try:
+        notification = Notification.objects.get(id=notification_id, receiver=request.user)
+        notification.is_read = True
+        notification.save()
+        return JsonResponse({'success': True})
+    except Notification.DoesNotExist:
+        return JsonResponse({'success': False})
