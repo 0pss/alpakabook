@@ -254,13 +254,17 @@
             </div>
 
             <div id="post-form">
-                <h3>Create a Post:</h3>
-                <form method="post" id="create-post-form">
-                    {% csrf_token %}
-                    <textarea name="content" id="post-content" placeholder="Write your post here"></textarea>
-                    <button type="submit">Post</button>
-                </form>
+                {% if request.user.id == user.id %}
+                    <h3>Create a Post:</h3>
+                    <form method="post" id="create-post-form">
+                        {% csrf_token %}
+                        <textarea name="content" id="post-content" placeholder="Write your post here"></textarea>
+                        <button type="submit">Post</button>
+                    </form>
+                {% endif %}
             </div>
+
+
 
 
                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>

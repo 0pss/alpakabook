@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseForbidden
 from django.http import Http404
 
 from .models import User_dev2 as User_dev
@@ -22,23 +22,30 @@ from django.http import JsonResponse
 from django.shortcuts import render
 from .models import Post
 from .forms import PostForm
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from .models import User_dev2, Post  # Import your User_dev and Post models
+from .forms import PostForm  # Import your PostForm if you have one
 
 
+@login_required
 def create_post(request, user_id):
+    if request.user.id != user_id:
+        # Check if the logged-in user's ID matches the user_id in the URL
+        return HttpResponseForbidden("You can only create posts on your own page.")
+
     if request.method == 'POST':
         form = PostForm(request.POST)
         if form.is_valid():
             post = form.save(commit=False)
-
             try:
                 user_instance = User_dev.objects.get(pk=user_id)
-                post.user = user_instance  # Assuming you have user authentication in place
+                post.user = user_instance  # Associate the post with the user's profile
                 post.save()
+                return JsonResponse({'message': 'Post created successfully'})
             except User_dev.DoesNotExist:
                 # Handle the case where the user with the specified ID doesn't exist
                 pass
-
-            return JsonResponse({'message': 'Post created successfully'})
 
     return JsonResponse({'message': 'Invalid form data'})
 
