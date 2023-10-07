@@ -1,0 +1,30 @@
+<!-- notifications.html -->
+<h2>Unread Notifications</h2>
+<ul>
+    {% for notification in unread_notifications %}
+        <li>
+            <p>{{ notification.sender.username }} sent you a friend request.</p>
+            <button onclick="acceptFriendRequest({{ notification.id }})">Accept</button>
+        </li>
+    {% empty %}
+        <p>No unread notifications.</p>
+    {% endfor %}
+</ul>
+
+<script>
+
+    function acceptFriendRequest(notificationId) {
+    // Use AJAX to send a request to the server to accept the friend request
+    fetch(`/user/accept_friend_request/${notificationId}/`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                // Update the UI (e.g., hide the notification)
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+}
+
+</script>

@@ -46,3 +46,14 @@ class Friendship(models.Model):
 
     class Meta:
         unique_together = ['sender', 'receiver']
+
+
+from django.contrib.auth.models import User
+from django.db import models
+
+class Notification(models.Model):
+    sender = models.ForeignKey(User_dev2, on_delete=models.CASCADE, related_name='sent_notifications')
+    receiver = models.ForeignKey(User_dev2, on_delete=models.CASCADE, related_name='received_notifications')
+    notification_type = models.CharField(max_length=20)  # E.g., 'friend_request'
+    created_at = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(default=False)

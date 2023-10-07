@@ -6,6 +6,7 @@ from .models import User_dev2 as User_dev
 
 from django.db.models import Q
 
+
 # Create your views here.
 # request --> response
 
@@ -15,9 +16,8 @@ def userpage(request, user_id):
         user = User_dev.objects.get(pk=user_id)
     except User_dev.DoesNotExist:
         raise Http404("User does not exist")
-    #print(user)
-    #return render(request, "hello.html", {'user': user})
-
+    # print(user)
+    # return render(request, "hello.html", {'user': user})
 
     viewed_user = User_dev.objects.get(id=user_id)
     logged_in_user = request.user
@@ -37,7 +37,6 @@ def userpage(request, user_id):
 
     print("When requesting user, this status was determined: ", viewed_user.friendship_status)
     return render(request, 'hello.html', {'user': viewed_user})
-
 
 
 from django.http import JsonResponse
@@ -121,6 +120,7 @@ class CustomLogoutView(LogoutView):
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
 
+
 @login_required
 def user_profile(request):
     # Your profile view logic here
@@ -136,9 +136,9 @@ from .models import Friendship
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 
+
 @login_required
 def handle_friend_request(request, user_id):
-
     if request.method == 'POST':
         import json
         post_data = json.loads(request.body.decode("utf-8"))
@@ -154,6 +154,10 @@ def handle_friend_request(request, user_id):
             # Create a new friendship request
             friendship = Friendship(sender=sender, receiver=receiver, status='request_sent')
             friendship.save()
+            # Create a Notification for the recipient
+            notification = Notification(sender=sender, receiver=receiver, notification_type='friend_request')
+            notification.save()
+
             new_status = 'request_sent'
         elif status == 'request_sent':
             # Accept the friend request
@@ -165,7 +169,50 @@ def handle_friend_request(request, user_id):
             # Handle other cases as needed
             new_status = status
 
-        print("nwéw Status: " , new_status, "   ", dict(Friendship.STATUS_CHOICES))
-        return JsonResponse({'success': True, 'new_status': new_status, 'new_status_display': dict(Friendship.STATUS_CHOICES)[new_status]})
+        print("nwéw Status: ", new_status, "   ", dict(Friendship.STATUS_CHOICES))
+        return JsonResponse({'success': True, 'new_status': new_status,
+                             'new_status_display': dict(Friendship.STATUS_CHOICES)[new_status]})
     return JsonResponse({'success': False})
 
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Friendship, Notification
+
+
+@login_required
+def accept_friend_request(request, notification_id):
+    notification = Notification.objects.get(id=notification_id)
+    print("notification_id: ",  notification_id, notification.receiver,  request.user, notification.notification_type)
+    if notification.receiver == request.user and notification.notification_type == 'friend_request':
+        # Update the friendship status
+        print("Friend status will be updated")
+        try:
+            friendship = Friendship.objects.get(sender=notification.sender, receiver=notification.receiver)
+            friendship.status = 'friends'
+            friendship.save()
+
+            # Create a Notification for the sender
+            notification = Notification(sender=notification.receiver, receiver=notification.sender,
+                                        notification_type='friend_request_accepted')
+            notification.save()
+        except Friendship.DoesNotExist:
+            # Handle the case where the friendship doesn't exist
+            pass
+
+        # Mark the notification as read
+        notification.is_read = True
+        notification.save()
+
+        return JsonResponse({'success': True})
+    return JsonResponse({'success': False})
+
+
+from .models import Notification
+
+
+def notifications(request):
+    # Retrieve and pass unread notifications to the template
+    unread_notifications = Notification.objects.filter(receiver=request.user, is_read=False)
+
+    return render(request, 'notifications.html', {'unread_notifications': unread_notifications})
