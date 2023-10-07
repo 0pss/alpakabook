@@ -236,3 +236,21 @@ def get_friendship_status(viewing_user, profile_user):
         return True  # They are friends
     except Friendship.DoesNotExist:
         return False  # They are not friends
+
+
+
+from django.shortcuts import get_object_or_404
+
+def user_friends(request, user_id):
+    # Get the user with the specified user_id
+    user = get_object_or_404(User_dev, id=user_id)
+
+    # Query the Friendship model to get the user's friends
+    sender_friends = Friendship.objects.filter(sender=user, status='friends').values_list('receiver__id', flat=True)
+    receiver_friends = Friendship.objects.filter(receiver=user, status='friends').values_list('sender__id', flat=True)
+
+    # Combine the friend IDs from both sender and receiver sides
+    friend_ids = list(sender_friends) + list(receiver_friends)
+
+
+    return JsonResponse({'friends': friend_ids})

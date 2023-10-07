@@ -14,6 +14,7 @@ urlpatterns = [
     path("accept_friend_request/<int:notification_id>/", views.accept_friend_request, name='accept_friend_request'),
     path('notifications/', views.notifications, name='notifications'),
     path('mark_notification_read/<int:notification_id>/', views.mark_notification_read, name='mark_notification_read'),
+    path('<int:user_id>/friends/', views.user_friends, name='user_friends'),
 
 # URL pattern for user registration
     path('signup/', views.register, name='signup'),
