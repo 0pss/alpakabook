@@ -105,6 +105,11 @@
         .nav-link{
   color: white !important;
   }
+
+
+        .custom-margin {
+    margin-left: 15px; /* Adjust the margin-right value as needed */
+}
     </style>
 </head>
 <body>
@@ -153,12 +158,22 @@
             <!-- User profile picture -->
         <img src="{% static 'U1.jpg' %}" alt="Profile Picture" class="fixed default-profile-picture">
           </div>
-          <div class="col-6"><h2 style="font-family:  Arial, sans-serif; color:#142b58" class="lol">{{user}}</h2>
+          <div class="col-6"><h2 style="font-family:  Arial, sans-serif; color:#142b58" class="lol">{{user}}         </h2>
 
 
-           <div id="friendship-status">
+           <div id="friendship-status" class="custom-margin">
                 {% if request.user != user %}
-                    <button id="friendship-button" data-user-id="{{ user.id }}" data-status="{{ user.friendship_status }}">{{ user.friendship_status_display }}</button>
+                   <button id="friendship-button"
+                            data-user-id="{{ user.id }}"
+                            data-status="{{ user.friendship_status }}"
+                            class="ml-2
+                                   {% if user.friendship_status == 'send_request' %}btn btn-primary{% elif user.friendship_status == 'request_sent' %}btn btn-secondary{% elif user.friendship_status == 'friends' %}btn btn-success{% endif %}
+                                   mt-2 custom-margin"
+                            {% if user.friendship_status != 'send_request' %}disabled{% endif %}>
+                        {{ user.friendship_status_display }}
+                    </button>
+
+
                 {% endif %}
             </div>
 

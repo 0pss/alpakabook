@@ -231,8 +231,15 @@ def mark_notification_read(request, notification_id):
         return JsonResponse({'success': False})
 
 def get_friendship_status(viewing_user, profile_user):
+
+    if viewing_user == profile_user:
+        return True
+
     try:
-        friendship = Friendship.objects.get(sender=viewing_user, receiver=profile_user, status='friends')
+        friendship = Friendship.objects.get(
+            Q(sender=viewing_user, receiver=profile_user, status='friends') |
+            Q(sender=profile_user, receiver=viewing_user, status='friends')
+        )
         return True  # They are friends
     except Friendship.DoesNotExist:
         return False  # They are not friends
