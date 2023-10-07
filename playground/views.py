@@ -261,3 +261,14 @@ def user_friends(request, user_id):
 
 
     return JsonResponse({'friends': friend_ids})
+
+
+def search_results(request):
+    search_query = request.GET.get('search_query')
+    if search_query:
+        # Perform a case-insensitive search for usernames
+        results = User_dev2.objects.filter(username__icontains=search_query)
+    else:
+        results = None
+
+    return render(request, 'search_results.html', {'results': results, 'search_query': search_query})

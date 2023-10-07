@@ -110,6 +110,12 @@
         .custom-margin {
     margin-left: 15px; /* Adjust the margin-right value as needed */
 }
+
+        /* Add this CSS to your project's stylesheets */
+.table-label {
+    width: 30%; /* Adjust the width as needed */
+    font-weight: bold; /* Optionally make the label text bold */
+}
     </style>
 </head>
 <body>
@@ -121,11 +127,13 @@
           <h1 style="font-family: 'alpaka', Arial, sans-serif;">alpakabook</h1>
           </div>
           <div class="col-5">
-            
+
+        <form method="get" action="{% url 'search_results' %}">
             <div class="input-group">
-                <input type="search" class="form-control rounded" placeholder="Suche" aria-label="Search" aria-describedby="search-addon" />
-                <button type="button" class="btn btn-outline-light"> {% bs_icon 'search' %} </button>
-              </div>
+                    <input type="search" name="search_query" class="form-control rounded" placeholder="Suche" aria-label="Search" aria-describedby="search-addon" />
+                    <button type="submit" class="btn btn-outline-light">{% bs_icon 'search' %}</button>
+            </div>
+        </form>
 
           </div>
           <div class="col-3">
@@ -183,28 +191,28 @@
         <table class="table">
            
             <tr>
-              <td>E-mail</td>
+              <td class="table-label">E-mail</td>
               <td>{{user.Email}}</td>
             </tr>
             <tr>
-              <td>Name</td>
+              <td class="table-label">Name</td>
               <td>{{user.Name}}</td>
             </tr>
             
             <tr>
-              <td>Alter</td>
+              <td class="table-label">Alter</td>
               <td>{{user.Age}}</td>
             </tr>
             <tr>
-              <td>Lieblingseis</td>
+              <td class="table-label">Lieblingseis</td>
               <td>{{user.FavIce}}</td>
             </tr>
             <tr>
-              <td>Hufgröße</td>
+              <td class="table-label">Hufgröße</td>
               <td>{{user.Shoesize}}</td>
             </tr>
             <tr>
-              <td>Hobbies</td>
+              <td class="table-label">Hobbies</td>
               <td>{{user.Hobbies}}</td>
             </tr>
           </table>
