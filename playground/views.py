@@ -35,8 +35,10 @@ def userpage(request, user_id):
 
     viewed_user.friendship_status_display = dict(Friendship.STATUS_CHOICES)[viewed_user.friendship_status]
 
+    is_friends = get_friendship_status(request.user, viewed_user)
+
     print("When requesting user, this status was determined: ", viewed_user.friendship_status)
-    return render(request, 'hello.html', {'user': viewed_user})
+    return render(request, 'hello.html', {'user': viewed_user, 'is_friends': is_friends})
 
 
 from django.http import JsonResponse
@@ -227,3 +229,10 @@ def mark_notification_read(request, notification_id):
         return JsonResponse({'success': True})
     except Notification.DoesNotExist:
         return JsonResponse({'success': False})
+
+def get_friendship_status(viewing_user, profile_user):
+    try:
+        friendship = Friendship.objects.get(sender=viewing_user, receiver=profile_user, status='friends')
+        return True  # They are friends
+    except Friendship.DoesNotExist:
+        return False  # They are not friends

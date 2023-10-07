@@ -164,7 +164,7 @@
 
 
 
-
+{% if is_friends %}
         <table class="table">
            
             <tr>
@@ -193,7 +193,11 @@
               <td>{{user.Hobbies}}</td>
             </tr>
           </table>
-        
+    {% else %}
+<br><br>
+        You must become friends with this user to see their activities and personal information.
+        <!-- Add a button to send a friend request or take other actions -->
+    {% endif %}
         </div>
         <div class="col-3">
             <div class="container">
@@ -256,8 +260,10 @@
 
           
           <br>
+
                     <div id="post-section">
                 <h3>Posts:</h3>
+            {% if is_friends %}
                 <div class="list-group">
                     <!-- Posts will be displayed here -->
                 </div>
@@ -273,6 +279,11 @@
                     </form>
                 {% endif %}
             </div>
+     {% else %}
+
+        <p>You must become friends with this user to see their activities and personal information.</p>
+        <!-- Add a button to send a friend request or take other actions -->
+    {% endif %}
 
 
 
