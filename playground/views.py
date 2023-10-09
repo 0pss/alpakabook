@@ -37,7 +37,6 @@ def userpage(request, user_id):
 
     is_friends = get_friendship_status(request.user, viewed_user)
 
-    print("When requesting user, this status was determined: ", viewed_user.friendship_status)
     return render(request, 'hello.html', {'user': viewed_user, 'is_friends': is_friends})
 
 
@@ -272,3 +271,15 @@ def search_results(request):
         results = None
 
     return render(request, 'search_results.html', {'results': results, 'search_query': search_query})
+
+def friend_list(request, user_id):
+    user = get_object_or_404(User_dev, id=user_id)
+
+    # Get friends where status is 'friends'
+    friends = Friendship.objects.filter(
+        Q(sender=user, status='friends') | Q(receiver=user, status='friends')
+    )
+
+    print(friends)
+
+    return render(request, 'friend_list.html', {'friends': friends})

@@ -125,7 +125,7 @@
 
 .edit-icon {
     position: absolute;
-    top: 20;
+    top: 20px;
     left: 0;
     width: 100%;
     height: 100%;
@@ -157,7 +157,9 @@
         <div class="container-fluid" style="position: relative; left:-10px;">
             <div class="row">
               <div class="col-4">
-          <h1 style="font-family: 'alpaka', Arial, sans-serif;">alpakabook</h1>
+           <a href="/user/{{ request.user.id}}" style="text-decoration: none; color: inherit;">
+        <h1 style="font-family: 'alpaka', Arial, sans-serif;">alpakabook</h1>
+    </a>
           </div>
           <div class="col-5">
 
@@ -170,11 +172,13 @@
 
           </div>
           <div class="col-3">
-    <a style="float: right;" class="nav-link" href="{% url 'notifications' %}">
-        {{ user }} 📬 <!-- Add the emoji character for notifications -->
-    </a>
-    <a href="#">
-        <img src="{% static 'U1.jpg' %}" alt="" width="40" height="40" class="round">
+              <a style="float: right; font-size: larger;" class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#notificationModal">📬 <!-- Add the emoji character for notifications --></a>
+    <a style="float: right;" class="nav-link" href="/user/{{ request.user.id}}" >
+    {{ request.user.username }}
+</a>
+
+    <a href="/user/{{ request.user.id}}">
+        <img src="{% static 'U1.jpg' %}" alt="" width="40" height="40" class="round" >
     </a>
 </div></div>
 
@@ -267,60 +271,11 @@
         <!-- Add a button to send a friend request or take other actions -->
     {% endif %}
         </div>
-        <div class="col-3">
-            <div class="container">
-            <div class="row">
-            <h2 style="font-family:  Arial, sans-serif; color:#142b58" class="lol2">Freund*innen:</h2>
+
+            <div class="col-3" id="friends">
+
             </div>
-            
-                <div class="row">
-                  <div class="col">
-                    <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
-                  </div>
-                  <div class="col">
-                    <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
-                  </div>
-                  <div class="col">
-                    <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
-                  </div>
-                </div>
-                <br>
-                <div class="row">
-                    <div class="col-4">
-                      <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
-                    </div>
-                    <div class="col-4">
-                      <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
-                    </div>
-                    <div class="col-4">
-                      <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
-                    </div>
-                  </div>
-                  <br>
-                  <div class="row">
-                    <div class="col">
-                      <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
-                    </div>
-                    <div class="col">
-                      <img src="{% static 'default.png' %}" class="img-thumbnail" alt="...">
-                    </div>
-                    <div class="col">
-                      <img src="{% static 'default.png' %}" class="img-thumbnail" style="width: 100%;">
-                    </div>
-                  </div>
 
-
-
-
-
-
-              </div>
-
-
-
-
-
-        </div>
         </div>
       </div>
     
@@ -353,11 +308,82 @@
         <!-- Add a button to send a friend request or take other actions -->
     {% endif %}
 
+<!-- Add this modal structure at the end of your HTML body -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                {% block content %}
+                    {% include 'notifications.html' %}
+                {% endblock %}
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
+
+
+
+
+    $(document).ready(function () {
+
+            $.ajax({
+                url: "/user/friend_list/{{ user.id }}",  // Update the URL to match your notifications view
+                type: "GET",
+                dataType: "html",  // Request HTML data
+                success: function (data) {
+                    // Inject the fetched HTML into the modal's body
+                    var frnds = document.getElementById("friends");
+
+                    frnds.innerHTML = data;
+
+                },
+                error: function () {
+                    console.error("Failed to fetch notifications.");
+                }
+            });
+
+    });
+
+
+
+
+    // Attach a click event handler to your notification icon
+    $("#notification-icon").click(function(event) {
+        event.preventDefault(); // Prevent the default link behavio
+    });
+
+       $(document).ready(function () {
+        $('#notificationModal').on('shown.bs.modal', function () {
+            // Fetch notifications using AJAX
+            $.ajax({
+                url: "/user/notifications/",  // Update the URL to match your notifications view
+                type: "GET",
+                dataType: "html",  // Request HTML data
+                success: function (data) {
+                    // Inject the fetched HTML into the modal's body
+                    var modalBody = $("#notificationModal .modal-body");
+                    modalBody.html(data);
+                },
+                error: function () {
+                    console.error("Failed to fetch notifications.");
+                }
+            });
+        });
+    });
+
+
+
+
+
                 // Function to retrieve and display posts
                    function getPosts(userId) {
                         $.get(`/user/${userId}/get_posts/`, function (data) {

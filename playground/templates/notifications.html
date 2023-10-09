@@ -1,18 +1,23 @@
 <!-- notifications.html -->
-<h2>Unread Notifications</h2>
-<ul>
+<ul class="list-group">
     {% for notification in unread_notifications %}
-        <li>
+        <li class="list-group-item" id="notification-{{ notification.id }}">
             {% if notification.notification_type == 'friend_request' %}
-                <p>{{ notification.sender.username }} sent you a friend request.</p>
-                <button onclick="acceptFriendRequest({{ notification.id }})">Accept</button>
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="mb-0">{{ notification.sender.username }} sent you a friend request.</p>
+                    <button class="btn btn-primary" onclick="acceptFriendRequest({{ notification.id }})">Accept</button>
+                </div>
             {% elif notification.notification_type == 'friend_request_accepted' %}
-                <p>{{ notification.sender.username }} has accepted {{ notification.id }} your request.</p>
-                <button onclick="markNotificationRead({{ notification.id }})">OK</button>
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="mb-0">{{ notification.sender.username }} has accepted your request.</p>
+                    <button class="btn btn-success" onclick="markNotificationRead({{ notification.id }})">OK</button>
+                </div>
             {% endif %}
         </li>
     {% empty %}
-        <p>No unread notifications.</p>
+        <li class="list-group-item">
+            <p>No unread notifications.</p>
+        </li>
     {% endfor %}
 </ul>
 
@@ -26,6 +31,10 @@
             .then(data => {
                 if (data.success) {
                     // Remove the notification from the UI or update its styling
+                    const notificationElement = document.getElementById(`notification-${notificationId}`);
+                    if (notificationElement) {
+                        notificationElement.remove();
+                    }
                 }
             })
             .catch(error => {
@@ -42,6 +51,10 @@ function acceptFriendRequest(notificationId) {
         .then(data => {
             if (data.success) {
                 // Update the UI (e.g., hide the notification)
+                const notificationElement = document.getElementById(`notification-${notificationId}`);
+                if (notificationElement) {
+                    notificationElement.remove();
+                }
             }
         })
         .catch(error => {

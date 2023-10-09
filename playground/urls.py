@@ -22,6 +22,7 @@ urlpatterns = [
 
     # URL pattern for user login
     path('login/', CustomLoginView.as_view(), name='login'),
+    path('friend_list/<int:user_id>/', views.friend_list, name='friend_list'),
 
     # URL pattern for user logout (if applicable)
     #path('logout/', views.logout_view, name='logout'),
