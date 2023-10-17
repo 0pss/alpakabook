@@ -1,0 +1,131 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>404 - Not Found</title>
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            overflow: hidden;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            position: relative; /* Ensure proper stacking context */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .star {
+            position: absolute;
+            background-color: white;
+            z-index: -1; /* Place stars in the background */
+        }
+        .error-text {
+            color: white;
+            position: absolute;
+            top: 50%; /* Center vertically */
+            left: 50%; /* Center horizontally */
+            transform: translate(-50%, -50%);
+            z-index: 2; /* Place the error text in the topmost layer */
+        }
+        .error-text .error-code {
+            font-size: 25vmin; /* Increase font size for "404" */
+            font-weight: bold; /* Make "404" bold */
+            -webkit-text-stroke: 8px black; /* Add black outline */
+            text-stroke: 8px black; /* Add black outline */
+        }
+        .error-text .error-message {
+            font-size: 2.5vmin; /* Decrease font size for the error message */
+            background-color: black; /* Set a black background */
+        }
+        .custom-svg {
+            width: 160vmin; /* Adjust the size as needed */
+            position: absolute;
+            left: 90%; /* Center the image horizontally */
+            top:90%; /* Center the image vertically */
+            transform: translate(-50%, -50%); /* Center the image precisely */
+            z-index: 1; /* Place the main SVG image in the foreground */
+        }
+        .moving-svg {
+            position: absolute;
+            width: 75vmin; /* Adjust the size as needed */
+            z-index: 2; /* Place the moving SVG image in the foreground */
+        }
+    </style>
+</head>
+<body>
+    <img src="{% static 'moon.svg' %}" alt="Custom SVG Image" class="custom-svg">
+    <img src="{% static 'alpaka.svg' %}" alt="Second SVG Image" class="moving-svg">
+    <div class="error-text">
+        <span class="error-code">404</span>
+        <br><span class="error-message">Erde an Alpaka, kommen sie zurück <a href="/user/1" style="color: yellow;">nach Hause</a></span>
+    </div>
+    <script>
+        // JavaScript for generating random stars and moving the SVG
+    </script>
+    <script>
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        function createRandomStar() {
+            const star = document.createElement('div');
+            star.className = 'star';
+            const size = getRandomInt(1, 4); // Random size from 1x1 to 4x4
+            const x = getRandomInt(0, window.innerWidth); // Random X position
+            const y = getRandomInt(0, window.innerHeight); // Random Y position
+            star.style.width = `${size}vmin`; // Use vmin to make it responsive
+            star.style.height = `${size}vmin`;
+            star.style.left = `${x}px`;
+            star.style.top = `${y}px`;
+            return star;
+        }
+
+        // Add random stars to the page
+        const numStars = 55; // Adjust the number of stars as needed
+        for (let i = 0; i < numStars; i++) {
+            const star = createRandomStar();
+            document.body.appendChild(star);
+        }
+
+        // JavaScript for moving the second SVG
+        const movingSVG = document.querySelector('.moving-svg');
+
+        // Random initial position and rotation
+        movingSVG.style.left = `${getRandomInt(0, window.innerWidth/2)}px`;
+        movingSVG.style.top = `${getRandomInt(0, window.innerHeight/2)}px`;
+        movingSVG.style.transform = `rotate(${getRandomInt(0, 360)}deg)`;
+
+        // Randomize the direction
+        const direction = Math.random() * 360; // Random angle in degrees
+
+        moveSecondSVG(movingSVG, direction);
+
+        function moveSecondSVG(svgElement, initialDirection) {
+            const speed = 1; // Adjust the speed as needed
+            const rotationSpeed = Math.random()/2;
+
+            const move = () => {
+                const currentLeft = parseFloat(svgElement.style.left);
+                const currentTop = parseFloat(svgElement.style.top);
+                const currentRotation = parseFloat(svgElement.style.transform.replace('rotate(', '').replace('deg)', ''));
+
+                const newX = currentLeft + Math.cos((currentRotation + initialDirection) * (Math.PI / 180)) * speed;
+                const newY = currentTop + Math.sin((currentRotation + initialDirection) * (Math.PI / 180)) * speed;
+
+                svgElement.style.left = newX + 'px';
+                svgElement.style.top = newY + 'px';
+                svgElement.style.transform = `rotate(${currentRotation + rotationSpeed}deg)`;
+
+                requestAnimationFrame(move);
+            };
+
+            move();
+        }
+
+    </script>
+</body>
+</html>
