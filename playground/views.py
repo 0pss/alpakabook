@@ -313,6 +313,5 @@ def upload_profile_picture(request, user_id):
         user_profile.save()
         is_friends = get_friendship_status(user_profile, user_profile)
 
-        return render(request, 'hello.html', {'user': user_profile, 'is_friends': is_friends})
-
+        return redirect(f'/user/{user_id}/')
 
