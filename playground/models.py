@@ -1,8 +1,11 @@
+from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
 # Create your models here.
+
+
 class User_dev2(AbstractUser):
 
     def __str__(self):
@@ -18,6 +21,8 @@ class User_dev2(AbstractUser):
     last_login = models.DateTimeField(verbose_name='last login', auto_now=True)
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
+
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True, validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
 
     # Specify the field to be used as the username for authentication
     USERNAME_FIELD = 'username'

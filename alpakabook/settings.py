@@ -24,10 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-y%$*_f^_txv^sfb4+e&hht=2aw#(=oo#_hlqip1stq%=hl1=fn"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["127.0.0.1"]
 
+MEDIA_URL = '/profile_pictures/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'profile_pictures')
 
 # Application definition
 

@@ -202,14 +202,29 @@
           <div class="col-3">
     <!-- User profile picture with edit icon -->
     <div class="profile-picture-container">
-        <img src="{% static 'U1.jpg' %}" alt="Profile Picture" class="fixed default-profile-picture">
+        <img src="/user/profile_pictures/{{ request.user.profile_picture }}" alt="Profile Picture" class="fixed default-profile-picture">
         {% if request.user == user %}
-        <div class="edit-icon">
-            <label for="profile-picture-upload">
-                <i class="bi bi-pencil">🖊️</i> <!-- Replace with your desired edit icon -->
-            </label>
-            <input type="file" id="profile-picture-upload" style="display: none;">
-        </div>
+
+            <form method="post" enctype="multipart/form-data" action="{% url 'upload_profile_picture' user.id %}" id="profile-picture-form">
+    {% csrf_token %}
+    <div class="edit-icon">
+        <label for="profile-picture-upload">
+            <i class="bi bi-pencil">🖊️</i>
+        </label>
+        <input type="file" id="profile-picture-upload" name="profile_picture" style="display: none;">
+    </div>
+    <input type="submit" value="Upload Picture" style="display: none;">
+</form>
+
+
+            <script>
+    document.getElementById("profile-picture-upload").addEventListener("change", function () {
+        document.getElementById("profile-picture-form").submit();
+    });
+</script>
+
+
+
         {% endif %}
 
     </div>

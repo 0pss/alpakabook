@@ -2,6 +2,9 @@ from django.urls import path
 from . import views
 from .views import CustomLoginView
 
+from django.conf import settings
+from django.conf.urls.static import static
+
 handler404 = 'playground.views.page_not_found'
 urlpatterns = [
     path('<int:user_id>/get_posts/', views.get_posts, name='get_posts'),
@@ -28,7 +31,10 @@ urlpatterns = [
 
     # URL pattern for user logout (if applicable)
     #path('logout/', views.logout_view, name='logout'),
-
+    path('upload_profile_picture/<int:user_id>/', views.upload_profile_picture, name='upload_profile_picture'),
 
 
 ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

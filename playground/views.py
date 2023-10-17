@@ -40,15 +40,16 @@ def userpage_json(request, user_id):
     except User_dev.DoesNotExist:
         raise Http404("User does not exist")
 
-    result ={
+    result = {
         "username": viewed_user.username,
         "FavIce": viewed_user.FavIce,
         "Shoesize": viewed_user.Shoesize,
         "Age": viewed_user.Age,
-        "Hobbies" :viewed_user.Hobbies,
+        "Hobbies": viewed_user.Hobbies,
     }
 
     return JsonResponse(result)
+
 
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -93,12 +94,12 @@ from .forms import CustomUserCreationForm
 
 def register(request):
     if request.method == 'POST':
-        form = CustomUserCreationForm(request.POST)
+        form = CustomUserCreationForm(request.POST, request.FILES)  # Include request.FILES to handle file uploads
+        print("FILES: ", request.FILES)
         if form.is_valid():
-            print("HERE")
             user = form.save()
             # Redirect to a success page or login the user
-            # return redirect('login')
+            return redirect('login')
         else:
             errors = form.errors
             print(errors)
@@ -194,7 +195,7 @@ from .models import Friendship, Notification
 @login_required
 def accept_friend_request(request, notification_id):
     notification = Notification.objects.get(id=notification_id)
-    print("notification_id: ",  notification_id, notification.receiver,  request.user, notification.notification_type)
+    print("notification_id: ", notification_id, notification.receiver, request.user, notification.notification_type)
     if notification.receiver == request.user and notification.notification_type == 'friend_request':
         # Update the friendship status
         print("Friend status will be updated")
@@ -205,7 +206,7 @@ def accept_friend_request(request, notification_id):
 
             # Create a Notification for the sender
             notification2 = Notification(sender=notification.receiver, receiver=notification.sender,
-                                        notification_type='friend_request_accepted', is_read=False)
+                                         notification_type='friend_request_accepted', is_read=False)
             notification2.save()
         except Friendship.DoesNotExist:
             # Handle the case where the friendship doesn't exist
@@ -239,8 +240,8 @@ def mark_notification_read(request, notification_id):
     except Notification.DoesNotExist:
         return JsonResponse({'success': False})
 
-def get_friendship_status(viewing_user, profile_user):
 
+def get_friendship_status(viewing_user, profile_user):
     if viewing_user == profile_user:
         return True
 
@@ -254,8 +255,8 @@ def get_friendship_status(viewing_user, profile_user):
         return False  # They are not friends
 
 
-
 from django.shortcuts import get_object_or_404
+
 
 def user_friends(request, user_id):
     # Get the user with the specified user_id
@@ -267,7 +268,6 @@ def user_friends(request, user_id):
 
     # Combine the friend IDs from both sender and receiver sides
     friend_ids = list(sender_friends) + list(receiver_friends)
-
 
     return JsonResponse({'friends': friend_ids})
 
@@ -281,6 +281,7 @@ def search_results(request):
         results = None
 
     return render(request, 'search_results.html', {'results': results, 'search_query': search_query})
+
 
 def friend_list(request, user_id):
     user = get_object_or_404(User_dev, id=user_id)
@@ -296,9 +297,22 @@ def friend_list(request, user_id):
 
 
 def page_not_found(request, exeption):
-
     """
     Page not found Error 404
     """
 
     return render(request, '404.html', status=404)
+
+
+def upload_profile_picture(request, user_id):
+    if request.method == 'POST':
+        profile_picture = request.FILES['profile_picture']
+        print(user_id)
+        user_profile = get_object_or_404(User_dev, id=user_id)
+        user_profile.profile_picture = profile_picture
+        user_profile.save()
+        is_friends = get_friendship_status(user_profile, user_profile)
+
+        return render(request, 'hello.html', {'user': user_profile, 'is_friends': is_friends})
+
+
