@@ -13,19 +13,13 @@ from django.db.models import Q
 def userpage(request, user_id):
     print(user_id)
     try:
-        user = User_dev.objects.get(pk=user_id)
+        viewed_user = User_dev.objects.get(id=user_id)
     except User_dev.DoesNotExist:
         raise Http404("User does not exist")
-    # print(user)
-    # return render(request, "hello.html", {'user': user})
-
-    viewed_user = User_dev.objects.get(id=user_id)
-    logged_in_user = request.user
 
     # Determine the friendship status
-
     friendship = Friendship.objects.filter(
-        (Q(sender=logged_in_user, receiver=viewed_user) | Q(sender=viewed_user, receiver=logged_in_user))).first()
+        (Q(sender=request.user, receiver=viewed_user) | Q(sender=viewed_user, receiver=request.user))).first()
 
     if friendship is not None:
         # Users are friends
@@ -34,11 +28,27 @@ def userpage(request, user_id):
         viewed_user.friendship_status = 'send_request'
 
     viewed_user.friendship_status_display = dict(Friendship.STATUS_CHOICES)[viewed_user.friendship_status]
-
     is_friends = get_friendship_status(request.user, viewed_user)
 
     return render(request, 'hello.html', {'user': viewed_user, 'is_friends': is_friends})
 
+
+def userpage_json(request, user_id):
+    print(user_id)
+    try:
+        viewed_user = User_dev.objects.get(id=user_id)
+    except User_dev.DoesNotExist:
+        raise Http404("User does not exist")
+
+    result ={
+        "username": viewed_user.username,
+        "FavIce": viewed_user.FavIce,
+        "Shoesize": viewed_user.Shoesize,
+        "Age": viewed_user.Age,
+        "Hobbies" :viewed_user.Hobbies,
+    }
+
+    return JsonResponse(result)
 
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -283,3 +293,12 @@ def friend_list(request, user_id):
     print(friends)
 
     return render(request, 'friend_list.html', {'friends': friends})
+
+
+def page_not_found(request, exeption):
+
+    """
+    Page not found Error 404
+    """
+
+    return render(request, '404.html', status=404)
