@@ -4,7 +4,6 @@ atomicwrites==1.4.0
 brotlipy==0.7.0
 constantly==15.1.0
 cssselect==1.1.0
-daal4py==2023.1.1
 datashape==0.5.2
 distlib==0.3.6
 Django==4.2.2
