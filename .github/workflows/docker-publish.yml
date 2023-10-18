@@ -10,7 +10,7 @@ on:
     # Publish semver tags as releases.
     tags: ["v*.*.*"]
     branches:
-      - "main"
+      - "docker"
 
 env:
   REGISTRY: ghcr.io
