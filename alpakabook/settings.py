@@ -26,8 +26,8 @@ SECRET_KEY = "django-insecure-y%$*_f^_txv^sfb4+e&hht=2aw#(=oo#_hlqip1stq%=hl1=fn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["127.0.0.1","0.0.0.0","alpakabook.de", 'https://alpakabook.de']
-CSRF_TRUSTED_ORIGINS = ['127.0.0.1', '0.0.0.0', 'https://alpakabook.de']
+ALLOWED_HOSTS = ["127.0.0.1","0.0.0.0","alpakabook.de"]
+CSRF_TRUSTED_ORIGINS = ['https://alpakabook.de']
 
 MEDIA_URL = '/profile_pictures/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'profile_pictures')
