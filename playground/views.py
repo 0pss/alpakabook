@@ -315,3 +315,6 @@ def upload_profile_picture(request, user_id):
 
         return redirect(f'/user/{user_id}/')
 
+
+def splash_screen(request):
+    return render(request, 'splash.html')  # Create a "splash.html" template for your splash screen

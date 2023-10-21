@@ -15,11 +15,11 @@
     <div class="row">
         {% for friend in friends %}
             <div class="col-4"> <!-- Use col-4 to display three profiles per row -->
-                <a href="/user/{{ friend.sender.id }}">
-                    {% if friend.sender.profile_picture %}
-                        <img src="{{ friend.sender.profile_picture.url }}" class="img-thumbnail" alt="{{ friend.sender.username }}">
+                <a href="/user/{{ friend.receiver.id }}">
+                    {% if friend.receiver.profile_picture %}
+                        <img src="{{ friend.receiver.profile_picture.url }}" class="img-thumbnail" alt="{{ friend.receiver.username }}">
                     {% else %}
-                        <img src="{% static 'U1.jpg' %}" class="img-thumbnail" alt="{{ friend.sender.username }}">
+                        <img src="{% static 'U1.jpg' %}" class="img-thumbnail" alt="{{ friend.receiver.username }}">
                     {% endif %}
                 </a>
             </div>
