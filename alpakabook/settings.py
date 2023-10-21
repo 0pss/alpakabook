@@ -24,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = "django-insecure-y%$*_f^_txv^sfb4+e&hht=2aw#(=oo#_hlqip1stq%=hl1=fn"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ["127.0.0.1","0.0.0.0","alpakabook.de"]
 CSRF_TRUSTED_ORIGINS = ['https://alpakabook.de']
