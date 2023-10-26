@@ -1,6 +1,7 @@
 from django.core.validators import FileExtensionValidator
 from django.db import models
 from django.contrib.auth.models import AbstractUser
+from django.utils import timezone
 
 
 # Create your models here.
@@ -9,8 +10,9 @@ from django.contrib.auth.models import AbstractUser
 class User_dev2(AbstractUser):
 
     def __str__(self):
-        return self.username
+        return self.anzeigename
 
+    anzeigename = models.CharField(max_length=200, null=False, blank=False)
     username = models.CharField(max_length=200, unique=True, null=False, blank=False)
     FavIce = models.CharField(max_length=200)
     Shoesize = models.CharField(max_length=200)
@@ -32,7 +34,7 @@ class User_dev2(AbstractUser):
 class Post(models.Model):
     user = models.ForeignKey(User_dev2, on_delete=models.CASCADE)
     content = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=False, editable=True, default=timezone.now())
 
 
 from django.contrib.auth.models import User
@@ -42,9 +44,9 @@ class Friendship(models.Model):
     sender = models.ForeignKey(User_dev2, related_name='sent_friend_requests', on_delete=models.CASCADE)
     receiver = models.ForeignKey(User_dev2, related_name='received_friend_requests', on_delete=models.CASCADE)
     STATUS_CHOICES = (
-        ('send_request', 'Send Request'),
-        ('request_sent', 'Request Sent'),
-        ('friends', 'Friends'),
+        ('send_request', 'Freundschaftsanfrage schicken'),
+        ('request_sent', 'Anfrage verschickt'),
+        ('friends', 'Befreundet'),
     )
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='send_request')
     created_at = models.DateTimeField(auto_now_add=True)

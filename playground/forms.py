@@ -16,9 +16,10 @@ class CustomUserCreationForm(UserCreationForm):
 
     class Meta:
         model = User_dev2
-        fields = ['username', 'FavIce', 'Shoesize', 'Age', 'Hobbies', 'profile_picture']
+        fields = ['anzeigename', 'username', 'FavIce', 'Shoesize', 'Age', 'Hobbies', 'profile_picture']
         labels = {
-            'username': 'Benutzername',
+            'anzeigename': 'Anzeigename',
+            'username': 'E-mail',
             'FavIce': 'Lieblingseis',
             'Shoesize': 'Hufgröße',
             'Age': 'Alter',

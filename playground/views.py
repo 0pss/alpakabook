@@ -84,8 +84,14 @@ def create_post(request, user_id):
 
 
 def get_posts(request, user_id):
+    try:
+        viewed_user = User_dev.objects.get(id=user_id)
+    except User_dev.DoesNotExist:
+        raise Http404("User does not exist")
+
+    is_friends = get_friendship_status(request.user, viewed_user)
     posts = Post.objects.filter(user_id=user_id).order_by('-timestamp')
-    return render(request, 'post_list.html', {'posts': posts})
+    return render(request, 'post_list.html', {'posts': posts,'is_friends': is_friends})
 
 
 from django.shortcuts import render, redirect
@@ -293,7 +299,7 @@ def friend_list(request, user_id):
 
     print(friends)
 
-    return render(request, 'friend_list.html', {'friends': friends})
+    return render(request, 'friend_list.html', {'friends': friends, 'viewed_user_id': user_id})
 
 
 def page_not_found(request, exeption):

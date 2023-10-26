@@ -174,7 +174,7 @@
           <div class="col-3">
               <a style="float: right; font-size: larger;" class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#notificationModal">📬 <!-- Add the emoji character for notifications --></a>
     <a style="float: right;" class="nav-link" href="/user/{{ request.user.id}}" >
-    {{ request.user.username }}
+    {{ request.user.anzeigename }}
 </a>
 
     <a href="/user/{{ request.user.id}}">
@@ -230,7 +230,7 @@
     </div>
 </div>
 
-          <div class="col-6"><h2 style="font-family:  Arial, sans-serif; color:#142b58" class="lol">{{user}}         </h2>
+          <div class="col-6"><h2 style="font-family:  Arial, sans-serif; color:#142b58" class="lol">{{user.anzeigename}}         </h2>
 
 
            <div id="friendship-status" class="custom-margin">
@@ -255,15 +255,6 @@
         <table class="table">
            
             <tr>
-              <td class="table-label">E-mail</td>
-              <td>{{user.Email}}</td>
-            </tr>
-            <tr>
-              <td class="table-label">Name</td>
-              <td>{{user.Name}}</td>
-            </tr>
-            
-            <tr>
               <td class="table-label">Alter</td>
               <td>{{user.Age}}</td>
             </tr>
@@ -282,7 +273,7 @@
           </table>
     {% else %}
 <br><br>
-        You must become friends with this user to see their activities and personal information.
+        Du kannst nur die Persönlichen Daten von befreundeten Nutzer*innen sehen!
         <!-- Add a button to send a friend request or take other actions -->
     {% endif %}
         </div>
@@ -301,7 +292,7 @@
 
                     <div id="post-section">
                 <h3>Posts:</h3>
-            {% if is_friends %}
+
                 <div class="list-group">
                     <!-- Posts will be displayed here -->
                 </div>
@@ -309,7 +300,7 @@
 
             <div id="post-form">
                 {% if request.user.id == user.id %}
-                    <h3>Create a Post:</h3>
+                    <h3>Teile einen Post:</h3>
                     <form method="post" id="create-post-form">
                         {% csrf_token %}
                         <textarea name="content" id="post-content" placeholder="Write your post here"></textarea>
@@ -317,18 +308,14 @@
                     </form>
                 {% endif %}
             </div>
-     {% else %}
 
-        <p>You must become friends with this user to see their activities and personal information.</p>
-        <!-- Add a button to send a friend request or take other actions -->
-    {% endif %}
 
 <!-- Add this modal structure at the end of your HTML body -->
 <div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+                <h5 class="modal-title" id="notificationModalLabel">Benachrichtigungen</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

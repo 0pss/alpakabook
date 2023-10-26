@@ -1,7 +1,14 @@
 {% for post in posts %}
 <a href="#" class="list-group-item list-group-item-action" aria-current="true">
     <div class="d-flex w-100 justify-content-between">
-        <p class="mb-1">{{ post.content }}</p>
+        {% if is_friends %}
+            <p class="mb-1">{{ post.content }}</p>
+     {% else %}
+
+        <p>Du kannst nur die Posts von befreundeten Nutzer*innen sehen!</p>
+        <!-- Add a button to send a friend request or take other actions -->
+    {% endif %}
+
         <small>{{ post.timestamp }}</small>
     </div>
 </a>

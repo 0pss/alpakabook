@@ -4,19 +4,19 @@
         <li class="list-group-item" id="notification-{{ notification.id }}">
             {% if notification.notification_type == 'friend_request' %}
                 <div class="d-flex justify-content-between align-items-center">
-                    <p class="mb-0">{{ notification.sender.username }} sent you a friend request.</p>
-                    <button class="btn btn-primary" onclick="acceptFriendRequest({{ notification.id }})">Accept</button>
+                    <p class="mb-0">{{ notification.sender.username }} hat dir eine Freundschaftsanfrage geschickt.</p>
+                    <button class="btn btn-primary" onclick="acceptFriendRequest({{ notification.id }})">Annehmen</button>
                 </div>
             {% elif notification.notification_type == 'friend_request_accepted' %}
                 <div class="d-flex justify-content-between align-items-center">
-                    <p class="mb-0">{{ notification.sender.username }} has accepted your request.</p>
+                    <p class="mb-0">{{ notification.sender.username }} hat deine Freundschaftsanfrage angenommen.</p>
                     <button class="btn btn-success" onclick="markNotificationRead({{ notification.id }})">OK</button>
                 </div>
             {% endif %}
         </li>
     {% empty %}
         <li class="list-group-item">
-            <p>No unread notifications.</p>
+            <p>Keine ungelesenen Benachrichtigungen.</p>
         </li>
     {% endfor %}
 </ul>
