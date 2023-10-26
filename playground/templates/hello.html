@@ -252,26 +252,32 @@
 
 
 {% if is_friends %}
-        <table class="table">
-           
-            <tr>
-              <td class="table-label">Alter</td>
-              <td>{{user.Age}}</td>
-            </tr>
-            <tr>
-              <td class="table-label">Lieblingseis</td>
-              <td>{{user.FavIce}}</td>
-            </tr>
-            <tr>
-              <td class="table-label">Hufgröße</td>
-              <td>{{user.Shoesize}}</td>
-            </tr>
-            <tr>
-              <td class="table-label">Hobbies</td>
-              <td>{{user.Hobbies}}</td>
-            </tr>
-          </table>
-    {% else %}
+    <form id="edit-user-form" method="POST">
+    {% csrf_token %}
+   <table class="table" id="pers-data">
+       <tr>
+           <td class="table-label">Alter</td>
+           <td class="editable" data-field-name="Age">{{ user.Age }}</td>
+       </tr>
+       <tr>
+           <td class="table-label">Lieblingseis</td>
+           <td class="editable" data-field-name="FavIce">{{ user.FavIce }}</td>
+       </tr>
+       <tr>
+           <td class="table-label">Hufgröße</td>
+           <td class="editable" data-field-name="Shoesize">{{ user.Shoesize }}</td>
+       </tr>
+       <tr>
+           <td class="table-label">Hobbies</td>
+           <td class="editable" data-field-name="Hobbies">{{ user.Hobbies }}</td>
+       </tr>
+   </table>
+        {% if request.user == user %}
+       <button type="button" id="edit-button">Bearbeiten</button>
+    <button type="submit" id="save-button" style="display: none;">Speichern</button>
+            {% endif %}
+</form>
+{% else %}
 <br><br>
         Du kannst nur die Persönlichen Daten von befreundeten Nutzer*innen sehen!
         <!-- Add a button to send a friend request or take other actions -->
@@ -285,20 +291,8 @@
         </div>
       </div>
     
-   
 
-          
-          <br>
-
-                    <div id="post-section">
-                <h3>Posts:</h3>
-
-                <div class="list-group">
-                    <!-- Posts will be displayed here -->
-                </div>
-            </div>
-
-            <div id="post-form">
+<div id="post-form">
                 {% if request.user.id == user.id %}
                     <h3>Teile einen Post:</h3>
                     <form method="post" id="create-post-form">
@@ -308,6 +302,16 @@
                     </form>
                 {% endif %}
             </div>
+    <br>
+                    <div id="post-section">
+                <h3>Posts:</h3>
+
+                <div class="list-group">
+                    <!-- Posts will be displayed here -->
+                </div>
+            </div>
+
+
 
 
 <!-- Add this modal structure at the end of your HTML body -->
@@ -333,7 +337,108 @@
 <script>
 
 
+       $(document).ready(function() {
+           let editMode = false;
 
+           $('#edit-button').click(function() {
+            if (editMode) {
+                // Save the edited data using AJAX or submit the form
+                // Here, we're just toggling the edit mode for demonstration
+                editMode = false;
+                $('#edit-button').show();
+                $('.editable').each(function() {
+                    var input = $(this).find('input');
+                    var text = input.val();
+
+
+                     $('#save-button').hide();
+                });
+            } else {
+                // Enter edit mode
+                editMode = true;
+                $('#edit-button').hide();
+                $('#save-button').show();
+                $('.editable').each(function() {
+                    var text = $(this).text();
+                    $(this).empty().append($('<input>', { type: 'text', value: text }));
+                });
+            }
+        });
+
+           $('#edit-user-form').submit(function(event) {
+               editMode = false;
+            event.preventDefault();  // Prevent the default form submission
+               formData = {
+                   'Age': $(this)[0][1]["value"],
+               'FavIce': $(this)[0][2]["value"],
+               'Shoesize': $(this)[0][3]["value"],
+               'Hobbies': $(this)[0][4]["value"]}
+
+               ag = $(this)[0][1]
+
+            // Serialize the form data
+            // Send the data to a Django view using AJAX
+               console.log(formData)
+            $.ajax({
+                url: '/user/{{ user.id }}/edit/',  // Update with the actual URL
+                type: 'POST',
+                headers: {
+                                    'X-CSRFToken': getCookie('csrftoken'), // Ensure you have a function to get CSRF token
+                                },
+                data: formData,
+                success: function(response) {
+                    // Handle the response (e.g., display a success message)
+                    console.log('Data saved successfully');
+                    var element = document.querySelector('td.editable[data-field-name="Age"]');
+                    var newTd = document.createElement('td');
+                    newTd.className = 'editable';
+                    newTd.setAttribute('data-field-name', 'Age');
+                    // Set the text content of the new <td> element
+                    newTd.textContent = formData["Age"];
+                    // Replace the existing <td> element with the new one
+                    element.parentNode.replaceChild(newTd, element);
+
+                    var element = document.querySelector('td.editable[data-field-name="FavIce"]');
+                    var newTd = document.createElement('td');
+                    newTd.className = 'editable';
+                    newTd.setAttribute('data-field-name', 'FavIce');
+                    // Set the text content of the new <td> element
+                    newTd.textContent = formData["FavIce"];
+                    // Replace the existing <td> element with the new one
+                    element.parentNode.replaceChild(newTd, element);
+
+                    var element = document.querySelector('td.editable[data-field-name="Shoesize"]');
+                    var newTd = document.createElement('td');
+                    newTd.className = 'editable';
+                    newTd.setAttribute('data-field-name', 'Shoesize');
+                    // Set the text content of the new <td> element
+                    newTd.textContent = formData["Shoesize"];
+                    // Replace the existing <td> element with the new one
+                    element.parentNode.replaceChild(newTd, element);
+
+                    var element = document.querySelector('td.editable[data-field-name="Hobbies"]');
+                    var newTd = document.createElement('td');
+                    newTd.className = 'editable';
+                    newTd.setAttribute('data-field-name', 'Hobbies');
+                    // Set the text content of the new <td> element
+                    newTd.textContent = formData["Hobbies"];
+                    // Replace the existing <td> element with the new one
+                    element.parentNode.replaceChild(newTd, element);
+
+
+
+                    $('#save-button').hide();
+                    $('#edit-button').show();
+                },
+                error: function() {
+                    // Handle errors (e.g., display an error message)
+                    console.log('Error while saving data');
+                }
+            });
+        });
+
+
+    });
 
     $(document).ready(function () {
 

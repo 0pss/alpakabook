@@ -54,7 +54,6 @@ def userpage_json(request, user_id):
 from django.http import JsonResponse
 from django.shortcuts import render
 from .models import Post
-from .forms import PostForm
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from .models import User_dev2, Post  # Import your User_dev and Post models
@@ -324,3 +323,26 @@ def upload_profile_picture(request, user_id):
 
 def splash_screen(request):
     return render(request, 'splash.html')  # Create a "splash.html" template for your splash screen
+
+
+def user_edit(request, user_id):
+    print(request)
+    if request.method == 'POST':
+        print(request)
+        # Retrieve and process the form data
+        age = request.POST['Age']
+        fav_ice = request.POST['FavIce']
+        shoesize = request.POST['Shoesize']
+        hobbies = request.POST['Hobbies']
+
+        # Update the user's data in the database
+        user = User_dev2.objects.get(pk=user_id)
+        user.Age = age
+        user.FavIce = fav_ice
+        user.Shoesize = shoesize
+        user.Hobbies = hobbies
+        user.save()
+
+        return JsonResponse({'message': 'Data saved successfully'})
+    else:
+        return JsonResponse({'error': 'Invalid request method'}, status=400)

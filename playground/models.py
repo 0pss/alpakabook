@@ -34,7 +34,7 @@ class User_dev2(AbstractUser):
 class Post(models.Model):
     user = models.ForeignKey(User_dev2, on_delete=models.CASCADE)
     content = models.TextField()
-    timestamp = models.DateTimeField(auto_now_add=False, editable=True, default=timezone.now())
+    timestamp = models.DateTimeField(auto_now_add=False, editable=True, default=timezone.now)
 
 
 from django.contrib.auth.models import User
