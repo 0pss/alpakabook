@@ -14,7 +14,7 @@ def anzeigen(user):
     hobby = user['Hobbies']
     shoe = user['Shoesize']
     age = user['Age']
-    
+    pfp = "http://127.0.0.1:8000/media/profile_pictures/" + (user['Profile_pic'].split("profile_pictures")[-1])
     html_content = f"""
             <!DOCTYPE html>
             <html>
@@ -53,7 +53,7 @@ def anzeigen(user):
             <body>
                 <div class="container2">
                     <div class="column2" style="flex: 3;"> <!-- 30% width -->
-                        <img src="http://127.0.0.1:8000/static/U1.jpg" alt="Profile Picture" class="fixed">
+                        <img src="{pfp}" alt="Profile Picture" class="fixed">
                     </div>
                     <div class="divider2"></div> <!-- 10% divider -->
                     <div class="column2" style="flex: 6;"> <!-- 60% width -->
@@ -116,7 +116,7 @@ def getInfo(user_id):
             return dotdict(user)
     
     else:
-        print(f"Failed to fetch friends for user {user_id}.")
+        print(f"Fehler! Konnte keine Daten für UserID {user_id} laden.")
         
         
         

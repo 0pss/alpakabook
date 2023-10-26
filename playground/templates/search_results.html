@@ -15,7 +15,7 @@
     <ul>
         {% for user in results %}
             <li>
-                <a href="{% url 'userpage' user.id %}">{{ user.username }}</a>
+                <a href="{% url 'userpage' user.id %}">{{ user.anzeigename }}</a>
             </li>
         {% endfor %}
     </ul>

@@ -15,9 +15,9 @@
         <h1>Login</h1>
         <form method="post">
             {% csrf_token %}
-            {{ form.username.label_tag }} {{ form.username }}
+            Email: {{ form.username }}
             <br>
-            {{ form.password.label_tag }} {{ form.password }}
+            Passwort: {{ form.password }}
             <br>
             <button type="submit">Login</button>
         </form>

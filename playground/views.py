@@ -41,11 +41,12 @@ def userpage_json(request, user_id):
         raise Http404("User does not exist")
 
     result = {
-        "username": viewed_user.username,
+        "username": viewed_user.anzeigename,
         "FavIce": viewed_user.FavIce,
         "Shoesize": viewed_user.Shoesize,
         "Age": viewed_user.Age,
         "Hobbies": viewed_user.Hobbies,
+        "Profile_pic": viewed_user.profile_picture.path,
     }
 
     return JsonResponse(result)
@@ -281,7 +282,7 @@ def search_results(request):
     search_query = request.GET.get('search_query')
     if search_query:
         # Perform a case-insensitive search for usernames
-        results = User_dev2.objects.filter(username__icontains=search_query)
+        results = User_dev2.objects.filter(anzeigename__icontains=search_query)
     else:
         results = None
 

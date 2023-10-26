@@ -24,7 +24,7 @@ class User_dev2(AbstractUser):
     is_superuser = models.BooleanField(default=False)
     is_staff = models.BooleanField(default=False)
 
-    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True, validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])])
+    profile_picture = models.ImageField(upload_to='profile_pictures/', blank=True, null=True, validators=[FileExtensionValidator(['png', 'jpg', 'jpeg'])], default="profile_pictures/None/default.png")
 
     # Specify the field to be used as the username for authentication
     USERNAME_FIELD = 'username'
