@@ -15,7 +15,7 @@ urlpatterns = [
     path("user/<int:user_id>/json/", views.userpage_json, name="userpage_json"),
     path("user/<int:user_id>/", views.userpage, name="userpage"),
     path("user/<int:user_id>/edit/", views.user_edit, name="user_edit"),
-
+    path("pad/", views.forward, name="forward"),
     path("user/handle_friend_request/<int:user_id>/", views.handle_friend_request, name='handle_friend_request'),
     path("user/accept_friend_request/<int:notification_id>/", views.accept_friend_request, name='accept_friend_request'),
     path('user/notifications/', views.notifications, name='notifications'),

@@ -347,3 +347,7 @@ def user_edit(request, user_id):
         return JsonResponse({'message': 'Data saved successfully'})
     else:
         return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+
+def forward(request):
+    return redirect("https://pad.alpaka.space/N-05i-kSQV6NvdAg5iBUXQ?view#")
